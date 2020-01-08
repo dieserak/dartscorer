@@ -39,7 +39,7 @@ export default {
     return {
       amountPlayers: 2,
       score: 501,
-      checkout: 1,
+      checkout: "d",
       goNext: false
     };
   },
