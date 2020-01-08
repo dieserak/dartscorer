@@ -1,79 +1,98 @@
 <template>
-  <div class="match">
-    <div class="scoreboard" v-for="player in amountPlayers" :key="player">
-      {{ player }}
-      {{ localScore }}
-      <input v-model="shoot" v-on:keyup.enter="setNewScore()" />
-    </div>
-    <vue-speech lang="de-DE" />
-  </div>
+	<div class="match">
+		<div
+			v-for="player in amountPlayers"
+			:key="player"
+			class="scoreboard"
+		>
+			{{ player }}
+			{{ localScore }}
+			<input
+				v-model="shoot"
+				@keyup.enter="setNewScore()"
+			>
+		</div>
+		<vue-speech
+			lang="de-DE"
+			@onTranscriptionEnd="onSpeechEnd"
+		/>
+	</div>
 </template>
 
 <script>
-import VueSpeech from "vue-speech";
-
 export default {
-  components: { VueSpeech },
-  data() {
-    return {
-      shoot: "",
-      localScore: this.score,
-      roundDartsThrown: 0,
-      players: []
-    };
-  },
-  mounted() {
-    const playerObject = {
-      number: 1,
-      score: this.score
-    };
-    for (i = 0; i > this.amountPlayers; i++) {
-      this.players.push(this.playerObject);
-    }
-  },
-  props: ["score", "amountPlayers", "checkout"],
-  methods: {
-    setNewScore() {
-      let shoot = this.shoot;
-      let multiplicator = shoot.charAt(0);
+	props: {
+		score: {type: Number},
+		amountPlayers: {type: Number},
+		checkout: {type: String}
+	},
+	data() {
+		return {
+			shoot: "",
+			localScore: this.score,
+			roundDartsThrown: 0,
+			players: []
+		};
+	},
+	mounted() {
+		const playerObject = {
+			number: 1,
+			score: this.score
+		};
+		for (let i = 0; i < this.amountPlayers; i++) {
+			this.players.push(playerObject);
+		}
+	},
+	methods: {
+		onSpeechEnd({ lastSentence, transcription }) {
+			console.log(lastSentence);
+			console.log(transcription);
+		},
+		setNewScore() {
+			const shoot = this.shoot;
 
-      this.checkScoreToHigh();
-      this.getMultipicator(multiplicator);
+			this.checkScoreTooHigh();
 
-      oldLocalScore = this.localScore;
+			const oldLocalScore = this.localScore;
 
-      this.localScore -= Number(shoot);
-      roundDartsThrown++;
-      this.checkScore(this.localScore, oldLocalScore, multiplicator);
-    },
-    checkScoreToHigh() {
-      if (this.shoot > 60) alert("too high - max 60 possible");
-    },
-    getMultipicator(multiplicator) {
-      if (multiplicator === "d") {
-        shoot = Number(shoot.slice(1)) * 2;
-      } else if (multiplicator === "t") {
-        shoot = Number(shoot.slice(1)) * 3;
-      } else {
-        multiplicator = "s";
-      }
-    },
-    checkScore(challengedScore, oldScore, multiplicator) {
-      if (challengedScored < 0) {
-        this.busted(oldScore);
-      } else if (challengedScored === 0) {
-        if (multiplicator === checkout) alert("Winner");
-        else {
-          this.busted(oldScore);
-        }
-      }
-    },
-    busted() {
-      alert("überowrfen");
-      this.localScore = oldScore;
-      roundDartsThrown = 0;
-    }
-  }
+			this.localScore -= Number(shoot);
+			this.roundDartsThrown++;
+			this.checkScore(
+				this.localScore,
+				oldLocalScore,
+				this.getMultipicator(shoot)
+			);
+		},
+		checkScoreTooHigh() {
+			if (this.shoot > 60) {alert("too high - max 60 possible");}
+		},
+		getMultipicator(shoot) {
+			const multiplicator = shoot.charAt(0);
+
+			if (multiplicator === "d") {
+				return Number(shoot.slice(1)) * 2;
+			} else if (multiplicator === "t") {
+				return Number(shoot.slice(1)) * 3;
+			} 
+			return "s";
+      
+		},
+		checkScore(challengedScore, oldScore, multiplicator) {
+			if (challengedScore < 0) {
+				this.busted(oldScore);
+			} else if (challengedScore === 0) {
+				if (multiplicator === this.checkout) {alert("Winner");}
+				else {
+					this.busted(oldScore);
+				}
+			}
+		},
+		busted(oldScore) {
+			alert("überowrfen");
+			this.localScore = oldScore;
+			this.roundDartsThrown = 0;
+		}
+	}
 };
 </script>
 
