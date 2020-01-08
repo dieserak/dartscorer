@@ -1,9 +1,10 @@
 <template>
   <div class="match">
-    {{ localScore }}
-    {{ amountPlayer }}
-    {{ checkout }}
-    <input v-model="shoot" v-on:keyup.enter="setNewScore()" />
+    <div class="scoreboard" v-for="player in amountPlayers" :key="player">
+      {{ player }}
+      {{ localScore }}
+      <input v-model="shoot" v-on:keyup.enter="setNewScore()" />
+    </div>
   </div>
 </template>
 
@@ -15,7 +16,7 @@ export default {
       localScore: this.score
     };
   },
-  props: ["score", "amountPlayer", "checkout"],
+  props: ["score", "amountPlayers", "checkout"],
   methods: {
     setNewScore() {
       if (this.shoot > 60) alert("too high - max 60 possible");
@@ -33,4 +34,10 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.scoreboard {
+  background-color: green;
+  padding: 20px;
+  margin: 20px;
+}
+</style>
