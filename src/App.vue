@@ -29,13 +29,13 @@
 			</div>
 			<div>
 				Checkout:
-				<button @click="setCheckout(1)">
+				<button @click="setCheckout('s')">
 					Singleout
 				</button>
-				<button @click="setCheckout(2)">
+				<button @click="setCheckout('d')">
 					Doubleout
 				</button>
-				<button @click="setCheckout(3)">
+				<button @click="setCheckout('t')">
 					Masterout
 				</button>
 			</div>
@@ -54,7 +54,9 @@ import Match from "./components/Match.vue";
 
 export default {
 	name: "App",
-	components: { Match },
+	components: {
+		Match
+	},
 	data() {
 		return {
 			amountPlayers: 2,
@@ -79,12 +81,12 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  #app {
+    font-family: "Avenir", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 60px;
+  }
 </style>

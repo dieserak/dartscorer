@@ -1,15 +1,23 @@
 <template>
-	<div class="match">
+	<div class="scoreboard">
 		<div
-			v-for="player in amountPlayers"
-			:key="player"
-			class="scoreboard"
+			v-for="player in players"
+			:key="player.id"
+			class="scoreboard-item"
+			:class="{'scoreboard-item--disabled': turn !== player.id}"
 		>
-			{{ player }}
-			{{ localScore }}
+			<div class="scoreboard-item__player">
+				Spieler: {{ player.id + 1 }}
+			</div>
+			<div class="scoreboard-item__score">
+				{{ player.score }}
+			</div>
+			<div class="scoreboard-item__shoot">
+				{{ player.roundDartsThrown }}
+			</div>
 			<input
-				v-model="shoot"
-				@keyup.enter="setNewScore()"
+				v-model="player.shoot"
+				@keyup.enter="setNewScore(player.id)"
 			>
 		</div>
 		<vue-speech
@@ -22,67 +30,110 @@
 <script>
 export default {
 	props: {
-		score: {type: Number},
-		amountPlayers: {type: Number},
-		checkout: {type: String}
+		score: {
+			type: Number
+		},
+		amountPlayers: {
+			type: Number
+		},
+		checkout: {
+			type: String
+		}
 	},
 	data() {
 		return {
-			shoot: "",
-			localScore: this.score,
 			roundDartsThrown: 0,
-			players: []
+			players: [],
+			turn: 0
 		};
 	},
 	mounted() {
-		const playerObject = {
-			number: 1,
-			score: this.score
-		};
 		for (let i = 0; i < this.amountPlayers; i++) {
-			this.players.push(playerObject);
+			this.players.push({
+				id: i,
+				score: this.score,
+				shoot: 0,
+				roundDartsThrown: 0
+			});
 		}
 	},
 	methods: {
-		onSpeechEnd({ lastSentence, transcription }) {
-			console.log(lastSentence);
-			console.log(transcription);
+		onSpeechEnd({
+			lastSentence,
+			transcription
+		}) {
+			let multiplicator = 1;
+			let convertedNumber = Number(lastSentence);
+			if(lastSentence.charAt(2) === 'x'){
+				multiplicator = Number(lastSentence.charAt(0));
+				convertedNumber = Number(lastSentence.slice(4));
+				console.log(multiplicator * convertedNumber)
+			}
+			else if(Number.isInteger(convertedNumber)){
+				console.log(Number(lastSentence));
+			}
 		},
-		setNewScore() {
-			const shoot = this.shoot;
+		setNewScore(playerID, isFullRound) {
+			const player = this.players[playerID];
+			const shoot = player.shoot;
 
-			this.checkScoreTooHigh();
+			this.checkScoreTooHigh(player);
 
-			const oldLocalScore = this.localScore;
+			const oldLocalScore = player.score;
 
-			this.localScore -= Number(shoot);
-			this.roundDartsThrown++;
+			player.score -= this.calculateMultipicator(shoot);
+			player.roundDartsThrown++;
 			this.checkScore(
-				this.localScore,
+				player.score,
 				oldLocalScore,
 				this.getMultipicator(shoot)
 			);
+			this.nextTurn(player);
 		},
-		checkScoreTooHigh() {
-			if (this.shoot > 60) {alert("too high - max 60 possible");}
+		checkScoreTooHigh(player) {
+			if (player.shoot > 60) {
+				alert("too high - max 60 possible");
+			}
 		},
-		getMultipicator(shoot) {
+		calculateMultipicator(shoot) {
 			const multiplicator = shoot.charAt(0);
 
 			if (multiplicator === "d") {
 				return Number(shoot.slice(1)) * 2;
 			} else if (multiplicator === "t") {
 				return Number(shoot.slice(1)) * 3;
-			} 
+			}
+			return Number(shoot);
+		},
+		nextTurn(player){
+			if(player.roundDartsThrown === 3){
+				player.roundDartsThrown = 0;
+				player.shoot = '';
+				if(this.players.length-1 > this.turn){
+					this.turn++;
+				}
+				else{
+					this.turn = 0;
+				}
+			}
+		},
+		getMultipicator(shoot) {
+			const multiplicator = shoot.charAt(0);
+
+			if (multiplicator === "d") {
+				return "d";
+			} else if (multiplicator === "t") {
+				return "t";
+			}
 			return "s";
-      
 		},
 		checkScore(challengedScore, oldScore, multiplicator) {
 			if (challengedScore < 0) {
 				this.busted(oldScore);
 			} else if (challengedScore === 0) {
-				if (multiplicator === this.checkout) {alert("Winner");}
-				else {
+				if (multiplicator === this.checkout) {
+					alert("Winner");
+				} else {
 					this.busted(oldScore);
 				}
 			}
@@ -96,10 +147,25 @@ export default {
 };
 </script>
 
-<style>
-.scoreboard {
-  background-color: green;
-  padding: 20px;
-  margin: 20px;
-}
+<style lang="scss">
+	.scoreboard-item{
+		background-color: #e8e8e8;
+		padding: 20px;
+		margin: 20px;
+		&__player{
+			font-size: 20px;
+		}
+		&__score{
+			font-size: 40px;
+		}
+		&--disabled{
+			pointer-events: none;
+			opacity: .2;
+		}
+	}
+	.scoreboard {
+		display: flex;
+    	justify-content: center;
+		
+	}
 </style>

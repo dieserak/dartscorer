@@ -7,7 +7,7 @@
     "jest": true
   },
   "extends": [
-    "eslint:recommended",
+    // "eslint:recommended",
     "plugin:vue/base",
     "plugin:vue/essential",
     "plugin:vue/strongly-recommended",
