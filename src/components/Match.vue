@@ -1,26 +1,28 @@
 <template>
-	<div class="scoreboard">
-		<div
-			v-for="player in players"
-			:key="player.id"
-			class="scoreboard-item"
-			:class="{'scoreboard-item--disabled': turn !== player.id}"
-		>
-			<div class="scoreboard-item__player">
-				Spieler: {{ player.id + 1 }}
-			</div>
-			<div class="scoreboard-item__score">
-				{{ player.score }}
-			</div>
-			<div class="scoreboard-item__shoot">
-				{{ player.roundDartsThrown }}
-			</div>
-			<input
-				:ref="'input' + player.id"
-				v-model="player.shoot"
-				@keyup.enter="setNewScore(player.id)"
+	<div class="match">
+		<div class="scoreboard" :class="{'scoreboard--1': amountPlayers === 1}">
+			<div
+				v-for="player in players"
+				:key="player.id"
+				class="scoreboard-item"
+				:class="{'scoreboard-item--disabled': turn !== player.id}"
 			>
-			<Checkout :checkout="player.score" />
+				<div class="scoreboard-item__player">
+					Spieler: {{ player.id + 1 }}
+				</div>
+				<div class="scoreboard-item__score">
+					{{ player.score }}
+				</div>
+				<div class="scoreboard-item__shoot">
+					{{ player.roundDartsThrown }}
+				</div>
+				<input
+					:ref="'input' + player.id"
+					v-model="player.shoot"
+					@keyup.enter="setNewScore(player.id)"
+				>
+				<Checkout :checkout="player.score" />
+			</div>
 		</div>
 		<vue-speech
 			lang="de-DE"
@@ -52,14 +54,7 @@ export default {
 		};
 	},
 	mounted() {
-		for (let i = 0; i < this.amountPlayers; i++) {
-			this.players.push({
-				id: i,
-				score: this.score,
-				shoot: '',
-				roundDartsThrown: 0
-			});
-		}
+		this.initMatch();
 	},
 	methods: {
 		onSpeechEnd({
@@ -164,6 +159,18 @@ export default {
 			}
 			else if (challengedScore === 0) {
 				alert("Winner");
+				this.initMatch();
+			}
+		},
+		initMatch(){
+			this.players = [];
+			for (let i = 0; i < this.amountPlayers; i++) {
+				this.players.push({
+					id: i,
+					score: this.score,
+					shoot: '',
+					roundDartsThrown: 0
+				});
 			}
 		},
 		busted(player, oldScore) {
@@ -179,7 +186,6 @@ export default {
 	.scoreboard-item{
 		background-color: #e8e8e8;
 		padding: 20px;
-		margin: 20px;
 		&__player{
 			font-size: 20px;
 		}
@@ -192,8 +198,14 @@ export default {
 		}
 	}
 	.scoreboard {
-		display: flex;
-    	justify-content: center;
-		
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+	    height: 100%;
+		&--1{
+			grid-template-columns: 1fr;
+		}
+	}
+	.match{
+		height: 100%;
 	}
 </style>
