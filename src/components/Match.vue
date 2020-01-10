@@ -53,6 +53,11 @@ export default {
 			turn: 0
 		};
 	},
+	computed:{
+		currentPlayer(){
+			return this.players[this.turn];
+		}
+	},
 	mounted() {
 		this.initMatch();
 	},
@@ -66,9 +71,13 @@ export default {
 			if(lastSentence.charAt(2) === 'x'){
 				multiplicator = Number(lastSentence.charAt(0));
 				convertedNumber = Number(lastSentence.slice(4));
+				//untested
+				this.currentPlayer.shoot = multiplicator * convertedNumber;
 				console.log(multiplicator * convertedNumber);
 			}
 			else if(Number.isInteger(convertedNumber)){
+				//untested
+				this.currentPlayer.shoot = Number(lastSentence);
 				console.log(Number(lastSentence));
 			}
 		},
@@ -76,7 +85,9 @@ export default {
 			const player = this.players[playerID];
 			const shoot = player.shoot;
 
-			this.checkScoreTooHigh(player.shoot);
+			if(this.checkScoreTooHigh(player.shoot)){
+				return
+			}
 
 			const oldLocalScore = player.score;
 
@@ -94,7 +105,9 @@ export default {
 			//have to check multiplication
 			if (shoot > 60) {
 				alert("too high - max 60 possible");
+				return true;
 			}
+			return false;
 		},
 		calculateMultipicator(shoot) {
 			const multiplicator = shoot.charAt(0);
