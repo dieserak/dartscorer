@@ -10,7 +10,10 @@
 				class="scoreboard-item"
 				:class="{'scoreboard-item--disabled': turn !== player.id}"
 			>
-				<button class="button button--remove" @click="removeLastShot()">
+				<button
+					class="button button--remove"
+					@click="removeLastShot()"
+				>
 					Letzten Wurf entfernen
 				</button>
 				<div class="scoreboard-item__player">
@@ -20,15 +23,18 @@
 					{{ player.score }}
 				</div>
 				<div class="scoreboard-item__shot">
-					<span v-for="(lastShot, i) in player.history" :key="'item' + i">
+					<span
+						v-for="(lastShot, i) in player.history"
+						:key="'item' + i"
+					>
 						<span v-if="i % 3 === 0 && i !== 0">|</span>
-						{{lastShot}}
+						{{ lastShot }}
 					</span>
 				</div>
 				<input
 					:ref="'input' + player.id"
 					v-model="player.shot"
-					@keyup.enter="setNewScore(player.id)"
+					@keyup.enter="setNewScore()"
 				>
 				<Checkout :checkout="player.score" />
 			</div>
@@ -80,18 +86,15 @@ export default {
 			if(lastSentence.charAt(2) === 'x'){
 				multiplicator = Number(lastSentence.charAt(0));
 				convertedNumber = Number(lastSentence.slice(4));
-				//untested
 				this.currentPlayer.shot = multiplicator * convertedNumber;
-				console.log(multiplicator * convertedNumber);
 			}
 			else if(Number.isInteger(convertedNumber)){
-				//untested
 				this.currentPlayer.shot = Number(lastSentence);
-				console.log(Number(lastSentence));
 			}
+			this.setNewScore();
 		},
-		setNewScore(playerID, isFullRound) {
-			const player = this.players[playerID];
+		setNewScore() {
+			const player = this.currentPlayer;
 			const shot = player.shot;
 
 			if(this.checkScoreTooHigh(player.shot)){
@@ -127,7 +130,7 @@ export default {
 			return false;
 		},
 		calculateMultipicator(shot) {
-			const multiplicator = shot.charAt(0);
+			const multiplicator = toString(shot).charAt(0);
 
 			if (multiplicator === "d") {
 				//have to check multiplication
