@@ -1,26 +1,46 @@
 <template>
 	<div class="match">
-		<div class="scoreboard" :class="{'scoreboard--1': amountPlayers === 1}">
+		<div
+			class="scoreboard"
+			:class="{'scoreboard--1': amountPlayers === 1}"
+		>
 			<div
 				v-for="player in players"
 				:key="player.id"
 				class="scoreboard-item"
 				:class="{'scoreboard-item--disabled': turn !== player.id}"
 			>
+				<button @click="removeLastShot()">
+					removeLastShot
+				</button>
 				<div class="scoreboard-item__player">
 					Spieler: {{ player.id + 1 }}
 				</div>
 				<div class="scoreboard-item__score">
 					{{ player.score }}
 				</div>
-				<div class="scoreboard-item__shoot">
-					{{ player.roundDartsThrown }}
-				</div>
-				<input
-					:ref="'input' + player.id"
-					v-model="player.shoot"
-					@keyup.enter="setNewScore(player.id)"
-				>
+				<fieldset>
+					Per Thrown Dart:
+					<div class="scoreboard-item__shot">
+						{{ player.roundDartsThrown }}
+					</div>
+					<input
+						:ref="'input' + player.id"
+						v-model="player.shot"
+						@keyup.enter="setNewScore(player.id)"
+					>
+				</fieldset>
+				<fieldset>
+					Per Round
+					<div class="scoreboard-item__shot">
+						{{ player.roundDartsThrown }}
+					</div>
+					<input
+						:ref="'input-round' + player.id"
+						v-model="player.round"
+						@keyup.enter="setNewScorePerRound(player.id)"
+					>
+				</fieldset>
 				<Checkout :checkout="player.score" />
 			</div>
 		</div>
@@ -72,28 +92,29 @@ export default {
 				multiplicator = Number(lastSentence.charAt(0));
 				convertedNumber = Number(lastSentence.slice(4));
 				//untested
-				this.currentPlayer.shoot = multiplicator * convertedNumber;
+				this.currentPlayer.shot = multiplicator * convertedNumber;
 				console.log(multiplicator * convertedNumber);
 			}
 			else if(Number.isInteger(convertedNumber)){
 				//untested
-				this.currentPlayer.shoot = Number(lastSentence);
+				this.currentPlayer.shot = Number(lastSentence);
 				console.log(Number(lastSentence));
 			}
 		},
 		setNewScore(playerID, isFullRound) {
 			const player = this.players[playerID];
-			const shoot = player.shoot;
+			const shot = player.shot;
 
-			if(this.checkScoreTooHigh(player.shoot)){
-				return
+			if(this.checkScoreTooHigh(player.shot)){
+				return;
 			}
 
-			const oldLocalScore = player.score;
+			player.history.push(this.calculateMultipicator(shot));
 
-			player.score -= this.calculateMultipicator(shoot);
+			const oldLocalScore = player.score;
+			player.score -= this.calculateMultipicator(shot);
 			player.roundDartsThrown++;
-			player.shoot = '';
+			player.shot = '';
 
 			this.checkScore(
 				player,
@@ -101,35 +122,42 @@ export default {
 			);
 			this.nextTurn(player);
 		},
-		checkScoreTooHigh(shoot) {
+		removeLastShot(){
+			if(this.currentPlayer.roundDartsThrown > 0){
+				const getLastShot = this.currentPlayer.history.pop();
+				this.currentPlayer.score += getLastShot;
+				this.currentPlayer.roundDartsThrown--;
+			}
+		},
+		checkScoreTooHigh(shot) {
 			//have to check multiplication
-			if (shoot > 60) {
+			if (shot > 60) {
 				alert("too high - max 60 possible");
 				return true;
 			}
 			return false;
 		},
-		calculateMultipicator(shoot) {
-			const multiplicator = shoot.charAt(0);
+		calculateMultipicator(shot) {
+			const multiplicator = shot.charAt(0);
 
 			if (multiplicator === "d") {
 				//have to check multiplication
-				const d = Number(shoot.slice(1)) * 2;
+				const d = Number(shot.slice(1)) * 2;
 				this.checkScoreTooHigh(d);
 				return d;
 
 			} else if (multiplicator === "t") {
 				//have to check multiplication
-				const t = Number(shoot.slice(1)) * 3;
+				const t = Number(shot.slice(1)) * 3;
 				this.checkScoreTooHigh(t);
 				return t;
 			}
-			return Number(shoot);
+			return Number(shot);
 		},
 		nextTurn(player){
 			if(player.roundDartsThrown === 3){
 				player.roundDartsThrown = 0;
-				player.shoot = '';
+				player.shot = '';
 				if(this.players.length-1 > this.turn){
 					this.turn++;
 				}
@@ -143,8 +171,8 @@ export default {
 			const ref = `input${this.turn}`;
 			this.$refs[ref][0].focus();
 		},
-		// getMultipicator(shoot) {
-		// 	const multiplicator = shoot.charAt(0);
+		// getMultipicator(shot) {
+		// 	const multiplicator = shot.charAt(0);
 
 		// 	if (multiplicator === "d") {
 		// 		return "d";
@@ -181,8 +209,10 @@ export default {
 				this.players.push({
 					id: i,
 					score: this.score,
-					shoot: '',
-					roundDartsThrown: 0
+					shot: '',
+					round: '',
+					roundDartsThrown: 0,
+					history: []
 				});
 			}
 		},

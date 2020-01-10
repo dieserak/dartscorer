@@ -1,6 +1,9 @@
 <template>
 	<div id="app">
-		<div v-if="!goNext" class="settings">
+		<div
+			v-if="!goNext"
+			class="settings"
+		>
 			<div class="settings__item">
 				Most used Plays:<br>
 				<button @click="setAmountPlayers(1); setScore(501); setCheckout('d'); goNext = true;">
