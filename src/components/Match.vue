@@ -16,9 +16,11 @@
 				{{ player.roundDartsThrown }}
 			</div>
 			<input
+				:ref="'input' + player.id"
 				v-model="player.shoot"
 				@keyup.enter="setNewScore(player.id)"
 			>
+			<Checkout :checkout="player.score" />
 		</div>
 		<vue-speech
 			lang="de-DE"
@@ -28,7 +30,9 @@
 </template>
 
 <script>
+import Checkout from './Checkout.vue';
 export default {
+	components: {Checkout},
 	props: {
 		score: {
 			type: Number
@@ -52,7 +56,7 @@ export default {
 			this.players.push({
 				id: i,
 				score: this.score,
-				shoot: 0,
+				shoot: '',
 				roundDartsThrown: 0
 			});
 		}
@@ -67,7 +71,7 @@ export default {
 			if(lastSentence.charAt(2) === 'x'){
 				multiplicator = Number(lastSentence.charAt(0));
 				convertedNumber = Number(lastSentence.slice(4));
-				console.log(multiplicator * convertedNumber)
+				console.log(multiplicator * convertedNumber);
 			}
 			else if(Number.isInteger(convertedNumber)){
 				console.log(Number(lastSentence));
@@ -77,21 +81,23 @@ export default {
 			const player = this.players[playerID];
 			const shoot = player.shoot;
 
-			this.checkScoreTooHigh(player);
+			this.checkScoreTooHigh(player.shoot);
 
 			const oldLocalScore = player.score;
 
 			player.score -= this.calculateMultipicator(shoot);
 			player.roundDartsThrown++;
+			player.shoot = '';
+
 			this.checkScore(
-				player.score,
-				oldLocalScore,
-				this.getMultipicator(shoot)
+				player,
+				oldLocalScore
 			);
 			this.nextTurn(player);
 		},
-		checkScoreTooHigh(player) {
-			if (player.shoot > 60) {
+		checkScoreTooHigh(shoot) {
+			//have to check multiplication
+			if (shoot > 60) {
 				alert("too high - max 60 possible");
 			}
 		},
@@ -99,9 +105,16 @@ export default {
 			const multiplicator = shoot.charAt(0);
 
 			if (multiplicator === "d") {
-				return Number(shoot.slice(1)) * 2;
+				//have to check multiplication
+				const d = Number(shoot.slice(1)) * 2;
+				this.checkScoreTooHigh(d);
+				return d;
+
 			} else if (multiplicator === "t") {
-				return Number(shoot.slice(1)) * 3;
+				//have to check multiplication
+				const t = Number(shoot.slice(1)) * 3;
+				this.checkScoreTooHigh(t);
+				return t;
 			}
 			return Number(shoot);
 		},
@@ -115,33 +128,48 @@ export default {
 				else{
 					this.turn = 0;
 				}
+				this.setFocusOnInput();
 			}
 		},
-		getMultipicator(shoot) {
-			const multiplicator = shoot.charAt(0);
+		setFocusOnInput(){
+			const ref = `input${this.turn}`;
+			this.$refs[ref][0].focus();
+		},
+		// getMultipicator(shoot) {
+		// 	const multiplicator = shoot.charAt(0);
 
-			if (multiplicator === "d") {
-				return "d";
-			} else if (multiplicator === "t") {
-				return "t";
-			}
-			return "s";
-		},
-		checkScore(challengedScore, oldScore, multiplicator) {
+		// 	if (multiplicator === "d") {
+		// 		return "d";
+		// 	} else if (multiplicator === "t") {
+		// 		return "t";
+		// 	}
+		// 	return "s";
+		// },
+
+		//eslint-disable-next-line
+		checkScore(player, oldScore) {
+			const challengedScore = player.score;
 			if (challengedScore < 0) {
-				this.busted(oldScore);
-			} else if (challengedScore === 0) {
-				if (multiplicator === this.checkout) {
-					alert("Winner");
-				} else {
-					this.busted(oldScore);
+				this.busted(player, oldScore);
+			}
+			if(this.checkout === 'd'){
+				if(challengedScore < 2 && challengedScore > 0){
+					this.busted(player, oldScore);
 				}
 			}
+			if(this.checkout === 't'){
+				if(challengedScore < 3 && challengedScore > 0){
+					this.busted(player, oldScore);
+				}
+			}
+			else if (challengedScore === 0) {
+				alert("Winner");
+			}
 		},
-		busted(oldScore) {
+		busted(player, oldScore) {
 			alert("überowrfen");
-			this.localScore = oldScore;
-			this.roundDartsThrown = 0;
+			player.score = oldScore;
+			this.nextTurn(player);
 		}
 	}
 };
