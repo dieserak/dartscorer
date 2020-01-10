@@ -30,17 +30,6 @@
 						@keyup.enter="setNewScore(player.id)"
 					>
 				</fieldset>
-				<fieldset>
-					Per Round
-					<div class="scoreboard-item__shot">
-						{{ player.roundDartsThrown }}
-					</div>
-					<input
-						:ref="'input-round' + player.id"
-						v-model="player.round"
-						@keyup.enter="setNewScorePerRound(player.id)"
-					>
-				</fieldset>
 				<Checkout :checkout="player.score" />
 			</div>
 		</div>
@@ -131,8 +120,8 @@ export default {
 		},
 		checkScoreTooHigh(shot) {
 			//have to check multiplication
-			if (shot > 60) {
-				alert("too high - max 60 possible");
+			if (shot > 180) {
+				alert("too high - max 180 possible");
 				return true;
 			}
 			return false;

@@ -6,10 +6,16 @@
 		>
 			<div class="settings__item">
 				Most used Plays:<br>
-				<button @click="setAmountPlayers(1); setScore(501); setCheckout('d'); goNext = true;">
+				<button
+					class="button"
+					@click="setAmountPlayers(1); setScore(501); setCheckout('d'); goNext = true;"
+				>
 					1 / 501 / Doubleout
 				</button>
-				<button @click="setAmountPlayers(2); setScore(501); setCheckout('d'); goNext = true;">
+				<button
+					class="button"
+					@click="setAmountPlayers(2); setScore(501); setCheckout('d'); goNext = true;"
+				>
 					2 / 501 / Doubleout
 				</button>
 			</div>
@@ -18,42 +24,72 @@
 				<div class="settings__item">
 					Players:<br>
 					<!-- have to be radiobuttons -->
-					<button @click="setAmountPlayers(1)">
-						1
-					</button>
-					<button @click="setAmountPlayers(2)">
-						2
-					</button>
-					<button @click="setAmountPlayers(3)">
-						3
-					</button>
-					<button @click="setAmountPlayers(4)">
-						4
-					</button>
+					<input
+						type="radio"
+						name="amountPlayers"
+						@click="setAmountPlayers(1)"
+					>
+					1
+					<input
+						type="radio"
+						name="amountPlayers"
+						@click="setAmountPlayers(2)"
+					>
+					2
+					<input
+						type="radio"
+						name="amountPlayers"
+						@click="setAmountPlayers(3)"
+					>
+					3
+					<input
+						type="radio"
+						name="amountPlayers"
+						@click="setAmountPlayers(4)"
+					>
+					4
 				</div>
 				<div class="settings__item">
 					X01<br>
-					<button @click="setScore(301)">
-						301
-					</button>
-					<button @click="setScore(501)">
-						501
-					</button>
-					<button @click="setScore(701)">
-						701
-					</button>
+					<input
+						type="radio"
+						name="x01"
+						@click="setScore(301)"
+					>
+					301
+					<input
+						type="radio"
+						name="x01"
+						@click="setScore(501)"
+					>
+					501
+					<input
+						type="radio"
+						name="x01"
+						@click="setScore(701)"
+					>
+					701
 				</div>
 				<div class="settings__item">
 					Checkout<br>
-					<button @click="setCheckout('s')">
-						Singleout
-					</button>
-					<button @click="setCheckout('d')">
-						Doubleout
-					</button>
-					<button @click="setCheckout('t')">
-						Masterout
-					</button>
+					<input
+						type="radio"
+						name="checkout"
+						@click="setCheckout('s')"
+					>
+					Singleout
+					<input
+						type="radio"
+						name="checkout"
+						@click="setCheckout('d')"
+					>
+					Doubleout
+					<input
+						type="radio"
+						name="checkout"
+						@click="setCheckout('t')"
+					>
+					Masterout
 				</div>
 			</div>
 		</div>
@@ -103,17 +139,17 @@ export default {
 	&__item{
 		padding-top: 20px;
 	}
-	button{
-		-webkit-appearance: none;
-		border: 0;
-		min-width: 60px;
-		min-height: 40px;
-		border-radius: 2px;
-		margin: 6px;
-		cursor: pointer;
-		-webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
-    	box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
-	}
+}
+.button{
+	-webkit-appearance: none;
+	border: 0;
+	min-width: 60px;
+	min-height: 40px;
+	border-radius: 2px;
+	margin: 6px;
+	cursor: pointer;
+	-webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+	box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
 }
 
 html,body,#app{
