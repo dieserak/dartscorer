@@ -146,10 +146,15 @@ export default {
 	min-width: 60px;
 	min-height: 40px;
 	border-radius: 2px;
+	padding: 0 12px;
 	margin: 6px;
 	cursor: pointer;
 	-webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
 	box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+	&--remove{
+		background-color: rgb(244, 67, 54);
+		color: #fff;
+	}
 }
 
 html,body,#app{

@@ -10,8 +10,8 @@
 				class="scoreboard-item"
 				:class="{'scoreboard-item--disabled': turn !== player.id}"
 			>
-				<button @click="removeLastShot()">
-					removeLastShot
+				<button class="button button--remove" @click="removeLastShot()">
+					Letzten Wurf entfernen
 				</button>
 				<div class="scoreboard-item__player">
 					Spieler: {{ player.id + 1 }}
@@ -19,17 +19,17 @@
 				<div class="scoreboard-item__score">
 					{{ player.score }}
 				</div>
-				<fieldset>
-					Per Thrown Dart:
-					<div class="scoreboard-item__shot">
-						{{ player.roundDartsThrown }}
-					</div>
-					<input
-						:ref="'input' + player.id"
-						v-model="player.shot"
-						@keyup.enter="setNewScore(player.id)"
-					>
-				</fieldset>
+				<div class="scoreboard-item__shot">
+					<span v-for="(lastShot, i) in player.history" :key="'item' + i">
+						<span v-if="i % 3 === 0 && i !== 0">|</span>
+						{{lastShot}}
+					</span>
+				</div>
+				<input
+					:ref="'input' + player.id"
+					v-model="player.shot"
+					@keyup.enter="setNewScore(player.id)"
+				>
 				<Checkout :checkout="player.score" />
 			</div>
 		</div>
