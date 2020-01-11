@@ -83,6 +83,8 @@ export default {
 		}) {
 			let multiplicator = 1;
 			let convertedNumber = Number(lastSentence);
+			console.log(lastSentence);
+
 			if(lastSentence.charAt(2) === 'x'){
 				multiplicator = Number(lastSentence.charAt(0));
 				convertedNumber = Number(lastSentence.slice(4));
@@ -90,6 +92,12 @@ export default {
 			}
 			else if(Number.isInteger(convertedNumber)){
 				this.currentPlayer.shot = Number(lastSentence);
+			}
+			else{
+				if(lastSentence.toLowerCase() === 'löschen'){
+					this.removeLastShot();
+				}
+				return;
 			}
 			this.setNewScore();
 		},
