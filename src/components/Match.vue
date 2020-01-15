@@ -77,6 +77,7 @@ export default {
 		this.initMatch();
 	},
 	methods: {
+		//eslint-disable-next-line
 		onSpeechEnd({
 			lastSentence,
 			transcription
@@ -87,6 +88,9 @@ export default {
 
 			if(lastSentence.charAt(2) === 'x'){
 				multiplicator = Number(lastSentence.charAt(0));
+				if(multiplicator > 3){
+					return;
+				}
 				convertedNumber = Number(lastSentence.slice(4));
 				this.currentPlayer.shot = multiplicator * convertedNumber;
 			}
@@ -94,9 +98,30 @@ export default {
 				this.currentPlayer.shot = Number(lastSentence);
 			}
 			else{
-				if(lastSentence.toLowerCase() === 'löschen'){
+				switch (lastSentence.toLowerCase()){
+				case 'löschen':
 					this.removeLastShot();
-				}
+					break;
+				case 'sexy':
+				case 'sex':
+					convertedNumber = 6;
+					break;
+				case 'ein':
+				case 'Rhein':
+					convertedNumber = 1;
+					break;
+				case '8 Uhr':
+					convertedNumber = 8;
+					break;
+				case '9 Uhr':
+					convertedNumber = 9;
+					break;
+				case '11 Uhr':
+					convertedNumber = 11;
+					break;
+				} 
+				if(Number.isInteger(convertedNumber))
+				{this.currentPlayer.shot = convertedNumber;}
 				return;
 			}
 			this.setNewScore();
@@ -138,7 +163,7 @@ export default {
 			return false;
 		},
 		calculateMultipicator(shot) {
-			const multiplicator = shot.charAt(0);
+			const multiplicator = shot.toString().charAt(0);
 
 			if (multiplicator === "d") {
 				//have to check multiplication
