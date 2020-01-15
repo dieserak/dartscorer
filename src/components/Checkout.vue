@@ -2,10 +2,10 @@
 	<div v-if="checkout < 171">
 		Checkout:
 		<span
-			v-for="(checkout, i) in checkouttable[checkout]"
+			v-for="(finishing, i) in checkouttable[checkout]"
 			:key="i"
 		>
-			{{ checkout }}
+			{{ finishing }}
 		</span>
 	</div>
 </template>

@@ -17,7 +17,7 @@
 					Letzten Wurf entfernen
 				</button>
 				<div class="scoreboard-item__player">
-					Spieler: {{ player.id + 1 }}
+					Spieler {{ `${player.id}` }}
 				</div>
 				<div class="scoreboard-item__score">
 					{{ player.score }}
@@ -25,14 +25,14 @@
 				<div class="scoreboard-item__shot">
 					<span
 						v-for="(lastShot, i) in player.history"
-						:key="'item' + i"
+						:key="`item${i}`"
 					>
 						<span v-if="i % 3 === 0 && i !== 0">|</span>
 						{{ lastShot }}
 					</span>
 				</div>
 				<input
-					:ref="'input' + player.id"
+					:ref="`input${player.id}`"
 					v-model="player.shot"
 					@keyup.enter="setNewScore()"
 				>
@@ -109,7 +109,7 @@ export default {
 				return;
 			}
 
-			player.history.push(this.calculateMultipicator(shot));
+			player.history = [...player.history, this.calculateMultipicator(shot)];
 
 			const oldLocalScore = player.score;
 			player.score -= this.calculateMultipicator(shot);
@@ -138,7 +138,7 @@ export default {
 			return false;
 		},
 		calculateMultipicator(shot) {
-			const multiplicator = toString(shot).charAt(0);
+			const multiplicator = shot.charAt(0);
 
 			if (multiplicator === "d") {
 				//have to check multiplication
@@ -206,14 +206,15 @@ export default {
 		initMatch(){
 			this.players = [];
 			for (let i = 0; i < this.amountPlayers; i++) {
-				this.players.push({
+				const playerObject = {
 					id: i,
 					score: this.score,
 					shot: '',
 					round: '',
 					roundDartsThrown: 0,
 					history: []
-				});
+				};
+				this.players = [...this.players, playerObject];
 			}
 		},
 		busted(player, oldScore) {

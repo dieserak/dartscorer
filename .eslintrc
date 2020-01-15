@@ -37,7 +37,6 @@
   "rules": {
     // enable additional rules
     "indent": ["error", "tab"],
-    "linebreak-style": ["error", "unix"],
     "semi": ["warn", "always"],
     // override default options for rules from base configurations
     "comma-dangle": ["error", "never"],
