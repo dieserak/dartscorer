@@ -5,22 +5,35 @@
 			class="settings"
 		>
 			<div class="settings__item">
-				Most used Plays:<br>
+				<h2 class="h2">
+					Most used Plays:
+				</h2>
 				<button
-					class="button"
+					class="button button--full"
 					@click="setAmountPlayers(1); setScore(501); setCheckout('d'); goNext = true;"
 				>
-					1 / 501 / Doubleout
+					1 Spieler – 501 – Doubleout
 				</button>
 				<button
-					class="button"
+					class="button button--full"
 					@click="setAmountPlayers(2); setScore(501); setCheckout('d'); goNext = true;"
 				>
-					2 / 501 / Doubleout
+					2 Spieler – 501 – Doubleout
 				</button>
 			</div>
-			<small @click="moreSettingsVisible = !moreSettingsVisible"><br>Erweitert</small>
-			<div v-if="moreSettingsVisible">
+			<div
+				class="accordion"
+				@click="moreSettingsVisible = !moreSettingsVisible"
+			>
+				Erweitert <IconArrow
+					class="accordion__icon"
+					:class="{'accordion__icon--active': moreSettingsVisible}"
+				/>
+			</div>
+			<div
+				v-if="moreSettingsVisible"
+				class="accordion__item"
+			>
 				<div class="settings__item">
 					Players:<br>
 					<!-- have to be radiobuttons -->
@@ -104,11 +117,12 @@
 
 <script>
 import Match from "./components/Match.vue";
+import IconArrow from './assets/arrow_drop_down-24px.svg';
 
 export default {
 	name: "App",
 	components: {
-		Match
+		Match, IconArrow
 	},
 	data() {
 		return {
@@ -135,9 +149,15 @@ export default {
 </script>
 
 <style lang="scss">
+$xs: 4px;
+$s: 8px;
+$m: 16px;
+
 .settings{
+	margin: $m;
+
 	&__item{
-		padding-top: 20px;
+		padding-bottom: $m;
 	}
 }
 .button{
@@ -146,14 +166,33 @@ export default {
 	min-width: 60px;
 	min-height: 40px;
 	border-radius: 2px;
-	padding: 0 12px;
-	margin: 6px;
+	padding: 0 $m;
+	margin: $s 0;
 	cursor: pointer;
 	-webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
 	box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
 	&--remove{
 		background-color: rgb(244, 67, 54);
 		color: #fff;
+	}
+	&--full{
+		width: calc(100% - 16px);
+	}
+}
+
+.accordion{
+	display: flex;
+	align-items: center;
+	margin: $m 0;
+	cursor: pointer;
+	&__icon{
+		// transition: transform .25s ease;
+		&--active{
+			transform: rotate(180deg);
+		}
+	}
+	&__item{
+
 	}
 }
 
@@ -165,7 +204,7 @@ html,body{ margin: 0;}
     font-family: "Avenir", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-align: center;
     color: #2c3e50;
+	font-size: 16px;
   }
 </style>
