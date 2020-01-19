@@ -37,6 +37,7 @@
 				<input
 					:ref="`input${player.id}`"
 					v-model="player.shot"
+					type="number"
 					class="input input--full-width"
 					@keyup.enter="setNewScore()"
 				>
@@ -225,16 +226,6 @@ export default {
 			const ref = `input${this.turn}`;
 			this.$refs[ref][0].focus();
 		},
-		// getMultipicator(shot) {
-		// 	const multiplicator = shot.charAt(0);
-
-		// 	if (multiplicator === "d") {
-		// 		return "d";
-		// 	} else if (multiplicator === "t") {
-		// 		return "t";
-		// 	}
-		// 	return "s";
-		// },
 
 		//eslint-disable-next-line
 		checkScore(player, oldScore) {

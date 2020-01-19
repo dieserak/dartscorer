@@ -199,7 +199,7 @@ $color-primary-hover: #6a1b9a;
 .input{
 	height: 40px;
 	border-radius: 2px;
-	border: 1px solid #e8e8e8;
+	border: 1px solid #ccc;
 	font-size: 24px;
 	&--full-width{
 		width: 100%;
