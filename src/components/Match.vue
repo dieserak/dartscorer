@@ -10,33 +10,36 @@
 				class="scoreboard-item"
 				:class="{'scoreboard-item--disabled': turn !== player.id}"
 			>
-				<button
-					class="button button--remove"
-					@click="removeLastShot()"
-				>
-					Letzten Wurf entfernen
-				</button>
-				<div class="scoreboard-item__player">
-					Spieler {{ `${player.id}` }}
-				</div>
-				<div class="scoreboard-item__score">
-					{{ player.score }}
-				</div>
-				<div class="scoreboard-item__shot">
-					<span
-						v-for="(lastShot, i) in player.history"
-						:key="`item${i}`"
+				<div>
+					<button
+						class="button button--remove u-v-centered"
+						@click="removeLastShot()"
 					>
-						<span v-if="i % 3 === 0 && i !== 0">|</span>
-						{{ lastShot }}
-					</span>
+						Letzten Wurf entfernen <IconDelete fill="#fff" />
+					</button>
+					<div class="scoreboard-item__player">
+						Spieler {{ `${player.id}` }}
+					</div>
+					<div class="scoreboard-item__score">
+						{{ player.score }}
+					</div>
+					<div class="scoreboard-item__shot">
+						<span
+							v-for="(lastShot, i) in player.history"
+							:key="`item${i}`"
+						>
+							<span v-if="i % 3 === 0 && i !== 0">|</span>
+							{{ lastShot }}
+						</span>
+					</div>
+					<Checkout :checkout="player.score" />
 				</div>
 				<input
+					class="input input--full-width"
 					:ref="`input${player.id}`"
 					v-model="player.shot"
 					@keyup.enter="setNewScore()"
 				>
-				<Checkout :checkout="player.score" />
 			</div>
 		</div>
 		<vue-speech
@@ -47,9 +50,11 @@
 </template>
 
 <script>
+import IconDelete from '../assets/delete-24px.svg';
 import Checkout from './Checkout.vue';
+
 export default {
-	components: {Checkout},
+	components: {Checkout, IconDelete},
 	props: {
 		score: {
 			type: Number
@@ -85,6 +90,7 @@ export default {
 			let multiplicator = 1;
 			let convertedNumber = Number(lastSentence);
 			console.log(lastSentence);
+			console.log("transcription",transcription);
 
 			if(lastSentence.charAt(2) === 'x'){
 				multiplicator = Number(lastSentence.charAt(0));
@@ -102,27 +108,50 @@ export default {
 				case 'löschen':
 					this.removeLastShot();
 					break;
+				case 'ein':
+				case 'eins':
+				case 'rhein':
+				case 'sein':
+					convertedNumber = 1;
+					break;
+				case 'zwei':
+					convertedNumber = 2;
+					break;
+				case 'drei':
+				case 'sky':
+					convertedNumber = 3;
+					break;
+				case 'tier':
+					convertedNumber = 4;
+					break;	
+				case 'schön':
+					convertedNumber = 5;
+					break;	
 				case 'sexy':
 				case 'sex':
 					convertedNumber = 6;
 					break;
-				case 'ein':
-				case 'Rhein':
-					convertedNumber = 1;
-					break;
-				case '8 Uhr':
+				case '8 uhr':
+				case 'ach':
 					convertedNumber = 8;
 					break;
-				case '9 Uhr':
+				case '9 uhr':
 					convertedNumber = 9;
 					break;
-				case '11 Uhr':
+				case '11 uhr':
 					convertedNumber = 11;
 					break;
+				case '13 uhr':
+					convertedNumber = 13;
+					break;
 				} 
-				if(Number.isInteger(convertedNumber))
-				{this.currentPlayer.shot = convertedNumber;}
-				return;
+				
+				if(Number.isInteger(convertedNumber)){
+					this.currentPlayer.shot = convertedNumber;
+				}
+				else{
+					return
+				}
 			}
 			this.setNewScore();
 		},
@@ -253,8 +282,11 @@ export default {
 
 <style lang="scss">
 	.scoreboard-item{
-		background-color: #e8e8e8;
 		padding: 20px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+
 		&__player{
 			font-size: 20px;
 		}
@@ -265,11 +297,17 @@ export default {
 			pointer-events: none;
 			opacity: .2;
 		}
+		&__shot{
+			min-height: 20px;
+		}
 	}
 	.scoreboard {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 	    height: 100%;
+		@media only screen and (max-width: 678px){
+			grid-template-columns: 1fr;
+		}
 		&--1{
 			grid-template-columns: 1fr;
 		}

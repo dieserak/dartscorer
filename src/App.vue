@@ -153,6 +153,14 @@ $xs: 4px;
 $s: 8px;
 $m: 16px;
 
+$color-primary: #4a148c;
+$color-primary-hover: #6a1b9a;
+
+.u-v-centered{
+	display: flex;
+	align-items: center;
+}
+
 .settings{
 	margin: $m;
 
@@ -171,6 +179,14 @@ $m: 16px;
 	cursor: pointer;
 	-webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
 	box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+	background-color: $color-primary;
+	transition: background-color .2s ease;
+	color:#fff;
+
+	&:hover{
+		background-color: $color-primary-hover;
+	}
+
 	&--remove{
 		background-color: rgb(244, 67, 54);
 		color: #fff;
@@ -178,6 +194,16 @@ $m: 16px;
 	&--full{
 		width: calc(100% - 16px);
 	}
+}
+
+.input{
+	height: 40px;
+	border-radius: 2px;
+	border: 1px solid #e8e8e8;
+	font-size: 24px;
+	&--full-width{
+		width: 100%;
+	}	
 }
 
 .accordion{
@@ -190,9 +216,6 @@ $m: 16px;
 		&--active{
 			transform: rotate(180deg);
 		}
-	}
-	&__item{
-
 	}
 }
 
