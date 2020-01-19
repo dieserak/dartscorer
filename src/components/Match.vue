@@ -35,9 +35,9 @@
 					<Checkout :checkout="player.score" />
 				</div>
 				<input
-					class="input input--full-width"
 					:ref="`input${player.id}`"
 					v-model="player.shot"
+					class="input input--full-width"
 					@keyup.enter="setNewScore()"
 				>
 			</div>
@@ -150,7 +150,7 @@ export default {
 					this.currentPlayer.shot = convertedNumber;
 				}
 				else{
-					return
+					return;
 				}
 			}
 			this.setNewScore();
