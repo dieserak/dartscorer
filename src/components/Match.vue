@@ -37,7 +37,6 @@
 				<input
 					:ref="`input${player.id}`"
 					v-model="player.shot"
-					type="number"
 					class="input input--full-width"
 					@keyup.enter="setNewScore()"
 				>
@@ -282,7 +281,7 @@ export default {
 			font-size: 20px;
 		}
 		&__score{
-			font-size: 40px;
+			font-size: 90px;
 		}
 		&--disabled{
 			pointer-events: none;
@@ -290,6 +289,7 @@ export default {
 		}
 		&__shot{
 			min-height: 20px;
+			font-size: 40px;
 		}
 	}
 	.scoreboard {

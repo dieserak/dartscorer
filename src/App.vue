@@ -8,18 +8,20 @@
 				<h2 class="h2">
 					Most used Plays:
 				</h2>
-				<button
-					class="button button--full"
-					@click="setAmountPlayers(1); setScore(501); setCheckout('d'); goNext = true;"
-				>
-					1 Spieler – 501 – Doubleout
-				</button>
-				<button
-					class="button button--full"
-					@click="setAmountPlayers(2); setScore(501); setCheckout('d'); goNext = true;"
-				>
-					2 Spieler – 501 – Doubleout
-				</button>
+				<div class="settings__actions">
+					<button
+						class="button button--full"
+						@click="setAmountPlayers(1); setScore(501); setCheckout('d'); goNext = true;"
+					>
+						1 Spieler – 501 – Doubleout
+					</button>
+					<button
+						class="button button--full"
+						@click="setAmountPlayers(2); setScore(501); setCheckout('d'); goNext = true;"
+					>
+						2 Spieler – 501 – Doubleout
+					</button>
+				</div>
 			</div>
 			<div
 				class="accordion"
@@ -149,12 +151,47 @@ export default {
 </script>
 
 <style lang="scss">
+@import url('https://fonts.googleapis.com/css?family=Bebas+Neue|Lora|Nunito|PT+Sans|Playfair+Display&display=swap');
+
+html,body,#app{
+	height: 100%;
+}
+html,body{ margin: 0;}
+#app, button {
+font-family: "Nunito", Arial, sans-serif;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+color: #2c3e50;
+font-size: 16px;
+}
+
+h1, h2, h3{
+	font-family: "Playfair Display";
+}
+
+h2{
+	font-size: 32px;
+}
+
 $xs: 4px;
 $s: 8px;
 $m: 16px;
 
-$color-primary: #4a148c;
-$color-primary-hover: #6a1b9a;
+$color-primary: #455A64;
+$color-primary-hover:#607D8B;
+$primary-color-light:  #CFD8DC;
+$primary-color-text:   #FFFFFF;
+$accent-color:         #03A9F4;
+$primary-text-color:   #212121;
+$secondary-text-color: #757575;
+$divider-color:        #BDBDBD;
+
+.settings__actions{
+	@media screen and (min-width: 768px){
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+	}
+}
 
 .u-v-centered{
 	display: flex;
@@ -163,6 +200,7 @@ $color-primary-hover: #6a1b9a;
 
 .settings{
 	margin: $m;
+	text-align: center;
 
 	&__item{
 		padding-bottom: $m;
@@ -188,7 +226,6 @@ $color-primary-hover: #6a1b9a;
 	}
 
 	&--remove{
-		background-color: rgb(244, 67, 54);
 		color: #fff;
 	}
 	&--full{
@@ -211,6 +248,7 @@ $color-primary-hover: #6a1b9a;
 	align-items: center;
 	margin: $m 0;
 	cursor: pointer;
+	justify-content: center;
 	&__icon{
 		// transition: transform .25s ease;
 		&--active{
@@ -219,15 +257,4 @@ $color-primary-hover: #6a1b9a;
 	}
 }
 
-html,body,#app{
-	height: 100%;
-}
-html,body{ margin: 0;}
-  #app {
-    font-family: "Avenir", Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
-	font-size: 16px;
-  }
 </style>
