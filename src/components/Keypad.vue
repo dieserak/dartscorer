@@ -33,7 +33,8 @@ export default {
 			this.$emit('KeypadClicked', this.input);
 		},
 		removeLast(){
-			this.input.slice(0, -1);
+			this.input = this.input.slice(0, -1);
+			this.$emit('KeypadClicked', this.input);
 		}
 	}
 };

@@ -40,11 +40,11 @@
 					class="input input--full-width"
 					@keyup.enter="setNewScore()"
 				>
-				<Keypad
-					@KeypadEnter="setNewScore()"
-					@KeypadClicked="getValue"
-				/>
 			</div>
+			<Keypad
+				@KeypadEnter="setNewScore()"
+				@KeypadClicked="getValue"
+			/>
 		</div>
 		<vue-speech
 			lang="de-DE"
