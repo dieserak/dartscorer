@@ -11,12 +11,12 @@
 				:class="{'scoreboard-item--disabled': turn !== player.id}"
 			>
 				<div>
-					<button
-						class="button button--remove u-v-centered"
-						@click="removeLastShot()"
-					>
-						Letzten Wurf entfernen <IconDelete fill="#fff" />
-					</button>
+					<Button 
+						text="Letzten Wurf entfernen"
+						remove
+						@click.native="removeLastShot()"
+					/>
+				
 					<div class="scoreboard-item__player">
 						Spieler {{ `${player.id}` }}
 					</div>
@@ -50,11 +50,11 @@
 </template>
 
 <script>
-import IconDelete from '../assets/delete-24px.svg';
 import Checkout from './Checkout.vue';
+import Button from './Button.vue';
 
 export default {
-	components: {Checkout, IconDelete},
+	components: {Checkout, Button},
 	props: {
 		score: {
 			type: Number

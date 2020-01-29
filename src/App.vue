@@ -9,18 +9,16 @@
 					Most used Plays:
 				</h2>
 				<div class="settings__actions">
-					<button
-						class="button button--full"
-						@click="setAmountPlayers(1); setScore(501); setCheckout('d'); goNext = true;"
-					>
-						1 Spieler – 501 – Doubleout
-					</button>
-					<button
-						class="button button--full"
-						@click="setAmountPlayers(2); setScore(501); setCheckout('d'); goNext = true;"
-					>
-						2 Spieler – 501 – Doubleout
-					</button>
+					<Button 
+						full
+						text="1 Spieler – 501 – Doubleout"
+						@click.native="setAmountPlayers(1); setScore(501); setCheckout('d'); goNext = true;"
+					/>
+					<Button 
+						full
+						text="2 Spieler – 501 – Doubleout"
+						@click.native="setAmountPlayers(2); setScore(501); setCheckout('d'); goNext = true;"
+					/>
 				</div>
 			</div>
 			<div
@@ -119,12 +117,13 @@
 
 <script>
 import Match from "./components/Match.vue";
+import Button from "./components/Button.vue";
 import IconArrow from './assets/arrow_drop_down-24px.svg';
 
 export default {
 	name: "App",
 	components: {
-		Match, IconArrow
+		Match, IconArrow, Button
 	},
 	data() {
 		return {
@@ -152,17 +151,51 @@ export default {
 
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css?family=Bebas+Neue|Lora|Nunito|PT+Sans|Playfair+Display&display=swap');
+@import './styles/mixins.scss';
+@import './styles/variables.scss';
+
+:root{
+	/* spacing */
+	--xs: 4px;
+	--s: 8px;
+	--m: 16px;
+	--l: 24px;
+	--xl: 32px;
+	--xxl: 72px;
+
+	/* color */
+	--color-primary: #455A64;
+	--color-primary-hover: #607D8B;
+	--primary-color-light: #CFD8DC;
+	--primary-color-text: #FFFFFF;
+	--accent-color: #03A9F4;
+	--primary-text-color: #2c3e50;
+	--secondary-text-color: #757575;
+	--divider-color: #BDBDBD;
+
+	/* text */
+	--text-base-size: 1em;
+	--text-scale-ratio: 1.2;
+	--text-xs: calc((1em / var(--text-scale-ratio)) / var(--text-scale-ratio));
+	--text-sm: calc(var(--text-xs) * var(--text-scale-ratio));
+	--text-md: calc(var(--text-sm) * var(--text-scale-ratio) * var(--text-scale-ratio));
+	--text-lg: calc(var(--text-md) * var(--text-scale-ratio));
+	--text-xl: calc(var(--text-lg) * var(--text-scale-ratio));
+	--text-xxl: calc(var(--text-xl) * var(--text-scale-ratio));
+	--text-xxxl: calc(var(--text-xxl) * var(--text-scale-ratio));
+}
 
 html,body,#app{
 	height: 100%;
 }
 html,body{ margin: 0;}
+
 #app, button {
-font-family: "Nunito", Arial, sans-serif;
--webkit-font-smoothing: antialiased;
--moz-osx-font-smoothing: grayscale;
-color: #2c3e50;
-font-size: 16px;
+	font-family: "Nunito", Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	color: var(--primary-text-color);
+	font-size: 16px;
 }
 
 h1, h2, h3{
@@ -173,21 +206,8 @@ h2{
 	font-size: 32px;
 }
 
-$xs: 4px;
-$s: 8px;
-$m: 16px;
-
-$color-primary: #455A64;
-$color-primary-hover:#607D8B;
-$primary-color-light:  #CFD8DC;
-$primary-color-text:   #FFFFFF;
-$accent-color:         #03A9F4;
-$primary-text-color:   #212121;
-$secondary-text-color: #757575;
-$divider-color:        #BDBDBD;
-
 .settings__actions{
-	@media screen and (min-width: 768px){
+	@include desktop {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 	}
@@ -199,37 +219,11 @@ $divider-color:        #BDBDBD;
 }
 
 .settings{
-	margin: $m;
+	margin: var(--m);
 	text-align: center;
 
 	&__item{
-		padding-bottom: $m;
-	}
-}
-.button{
-	-webkit-appearance: none;
-	border: 0;
-	min-width: 60px;
-	min-height: 40px;
-	border-radius: 2px;
-	padding: 0 $m;
-	margin: $s 0;
-	cursor: pointer;
-	-webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
-	box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
-	background-color: $color-primary;
-	transition: background-color .2s ease;
-	color:#fff;
-
-	&:hover{
-		background-color: $color-primary-hover;
-	}
-
-	&--remove{
-		color: #fff;
-	}
-	&--full{
-		width: calc(100% - 16px);
+		padding-bottom: var(--m);
 	}
 }
 
@@ -246,11 +240,10 @@ $divider-color:        #BDBDBD;
 .accordion{
 	display: flex;
 	align-items: center;
-	margin: $m 0;
+	margin: var(--m) 0;
 	cursor: pointer;
 	justify-content: center;
 	&__icon{
-		// transition: transform .25s ease;
 		&--active{
 			transform: rotate(180deg);
 		}
