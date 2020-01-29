@@ -41,23 +41,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .keypad{
-        height: 100%;
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        grid-template-rows: 1fr 1fr 1fr 1fr;
-        border-bottom: 1px solid var(--divider-color);
-        border-left: 1px solid var(--divider-color);
-        grid-column: 1 / span 2;
+@import '../styles/mixins.scss';
 
-        span{
-            cursor: pointer;
-            min-height: 24px;
-            border-top: 1px solid var(--divider-color);
-            border-right: 1px solid var(--divider-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+.keypad{
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    border-bottom: 1px solid var(--divider-color);
+    border-left: 1px solid var(--divider-color);
+    @include desktop {
+        grid-column: 1 / span 2;
     }
+
+    span{
+        cursor: pointer;
+        min-height: 24px;
+        border-top: 1px solid var(--divider-color);
+        border-right: 1px solid var(--divider-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
 </style>

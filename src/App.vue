@@ -209,7 +209,7 @@ h2{
 .settings__actions{
 	@include desktop {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: 50% 50%;
 	}
 }
 
