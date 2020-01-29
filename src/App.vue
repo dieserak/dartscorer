@@ -185,6 +185,19 @@ export default {
 	--text-xxxl: calc(var(--text-xxl) * var(--text-scale-ratio));
 }
 
+::-webkit-scrollbar-thumb {
+	border-radius: 20px;
+	background: var(--divider-color);
+}
+
+::-webkit-scrollbar-track {
+	background: #fff;
+}
+
+::-webkit-scrollbar {
+	width: 4px;
+}
+
 html,body,#app{
 	height: 100%;
 }
@@ -216,6 +229,10 @@ h2{
 .u-v-centered{
 	display: flex;
 	align-items: center;
+}
+
+.u-mr-s{
+	margin-right: var(--s);
 }
 
 .settings{
