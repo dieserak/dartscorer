@@ -25,13 +25,15 @@ export default {
 	},
 	methods:{
 		enter(){
-            
+			this.$emit('KeypadEnter', this.input);
+			this.input = "";
 		},
 		addNum(num){
 			this.input += num;
+			this.$emit('KeypadClicked', this.input);
 		},
 		removeLast(){
-            
+			this.input.slice(0, -1);
 		}
 	}
 };

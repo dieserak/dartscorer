@@ -40,7 +40,10 @@
 					class="input input--full-width"
 					@keyup.enter="setNewScore()"
 				>
-				<Keypad />
+				<Keypad
+					@KeypadEnter="setNewScore()"
+					@KeypadClicked="getValue"
+				/>
 			</div>
 		</div>
 		<vue-speech
@@ -84,6 +87,9 @@ export default {
 		this.initMatch();
 	},
 	methods: {
+		getValue (value) {
+			this.currentPlayer.shot = value;
+    	},
 		//eslint-disable-next-line
 		onSpeechEnd({
 			lastSentence,
@@ -290,7 +296,7 @@ export default {
 			opacity: .2;
 		}
 		&__shot{
-			min-height: 20px;
+			min-height: 60px;
 			font-size: 40px;
 		}
 	}
