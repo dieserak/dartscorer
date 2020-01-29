@@ -40,6 +40,7 @@
 					class="input input--full-width"
 					@keyup.enter="setNewScore()"
 				>
+				<Keypad />
 			</div>
 		</div>
 		<vue-speech
@@ -52,9 +53,10 @@
 <script>
 import Checkout from './Checkout.vue';
 import Button from './Button.vue';
+import Keypad from './Keypad.vue';
 
 export default {
-	components: {Checkout, Button},
+	components: {Checkout, Button, Keypad},
 	props: {
 		score: {
 			type: Number
