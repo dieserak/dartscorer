@@ -23,14 +23,16 @@
 					<div class="scoreboard-item__score">
 						{{ player.score }}
 					</div>
-					<div class="scoreboard-item__shot">
-						<span
-							v-for="(lastShot, i) in player.history"
-							:key="`item${i}`"
-						>
-							<span v-if="i % 3 === 0 && i !== 0">|</span>
-							{{ lastShot }}
-						</span>
+					<div>
+						<div class="scoreboard-item__shot">
+							<span
+								v-for="(lastShot, i) in player.history"
+								:key="`item${i}`"
+							>
+								<span v-if="i % 3 === 0 && i !== 0">|</span>
+								{{ lastShot }}
+							</span>
+						</div>
 					</div>
 					<Checkout :checkout="player.score" />
 				</div>
@@ -183,6 +185,11 @@ export default {
 				oldLocalScore
 			);
 			this.nextTurn(player);
+
+			setTimeout(() => {
+				const objDiv = document.getElementsByClassName("scoreboard-item__shot")[0];
+				objDiv.scrollLeft = objDiv.scrollWidth + 2000;
+			}, 200);
 		},
 		removeLastShot(){
 			if(this.currentPlayer.roundDartsThrown > 0){
@@ -284,6 +291,7 @@ export default {
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
+		max-width: calc(100vw - 40px);
 
 		&__player{
 			font-size: 20px;
@@ -296,8 +304,10 @@ export default {
 			opacity: .2;
 		}
 		&__shot{
-			min-height: 60px;
+			height: 60px;
 			font-size: 40px;
+			white-space: nowrap;
+			overflow: auto;
 		}
 	}
 	.scoreboard {

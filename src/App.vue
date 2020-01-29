@@ -196,6 +196,7 @@ export default {
 
 ::-webkit-scrollbar {
 	width: 4px;
+	height: 4px;
 }
 
 html,body,#app{
