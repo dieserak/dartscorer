@@ -187,9 +187,11 @@ export default {
 			this.nextTurn(player);
 
 			setTimeout(() => {
-				const objDiv = document.getElementsByClassName("scoreboard-item__shot")[0];
-				objDiv.scrollLeft = objDiv.scrollWidth + 2000;
-			}, 200);
+				const objDiv = document.getElementsByClassName("scoreboard-item__shot");
+				[...objDiv].forEach((button) => {
+					button.scrollLeft = button.scrollWidth + 1000;
+				});
+			}, 100);
 		},
 		removeLastShot(){
 			if(this.currentPlayer.roundDartsThrown > 0){
@@ -286,12 +288,17 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../styles/mixins.scss';
+
 	.scoreboard-item{
 		padding: 20px;
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
 		max-width: calc(100vw - 40px);
+		@include desktop{
+			max-width: calc(50vw - 40px);
+		}
 
 		&__player{
 			font-size: 20px;
