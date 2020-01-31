@@ -11,12 +11,12 @@
 				:class="{'scoreboard-item--disabled': turn !== player.id}"
 			>
 				<div>
-					<Button 
+					<Button
 						text="Letzten Wurf entfernen"
 						remove
 						@click.native="removeLastShot()"
 					/>
-				
+
 					<div class="scoreboard-item__player">
 						Spieler {{ `${player.id}` }}
 					</div>
@@ -39,6 +39,7 @@
 				<input
 					:ref="`input${player.id}`"
 					v-model="player.shot"
+					:readonly="$_isMobile"
 					class="input input--full-width"
 					@keyup.enter="setNewScore()"
 				>
@@ -56,12 +57,14 @@
 </template>
 
 <script>
-import Checkout from './Checkout.vue';
-import Button from './Button.vue';
-import Keypad from './Keypad.vue';
+import { detectingMobileMixin } from "../mixins/detectingMobileMixin";
+import Checkout from "./Checkout.vue";
+import Button from "./Button.vue";
+import Keypad from "./Keypad.vue";
 
 export default {
-	components: {Checkout, Button, Keypad},
+	components: { Checkout, Button, Keypad },
+	mixins: [detectingMobileMixin],
 	props: {
 		score: {
 			type: Number
@@ -80,8 +83,8 @@ export default {
 			turn: 0
 		};
 	},
-	computed:{
-		currentPlayer(){
+	computed: {
+		currentPlayer() {
 			return this.players[this.turn];
 		}
 	},
@@ -89,77 +92,74 @@ export default {
 		this.initMatch();
 	},
 	methods: {
-		getValue (value) {
+		getValue(value) {
 			this.currentPlayer.shot = value;
-    	},
+		},
 		//eslint-disable-next-line
-		onSpeechEnd({
-			lastSentence,
-			transcription
-		}) {
+    onSpeechEnd({ lastSentence, transcription }) {
 			let multiplicator = 1;
 			let convertedNumber = Number(lastSentence);
 			console.log(lastSentence);
-			console.log("transcription",transcription);
+			console.log("transcription", transcription);
 
-			if(lastSentence.charAt(2) === 'x'){
+			if (lastSentence.charAt(2) === "x") {
 				multiplicator = Number(lastSentence.charAt(0));
-				if(multiplicator > 3){
+				if (multiplicator > 3) {
 					return;
 				}
 				convertedNumber = Number(lastSentence.slice(4));
 				this.currentPlayer.shot = multiplicator * convertedNumber;
-			}
-			else if(Number.isInteger(convertedNumber)){
+			} else if (Number.isInteger(convertedNumber)) {
 				this.currentPlayer.shot = Number(lastSentence);
-			}
-			else{
-				switch (lastSentence.toLowerCase()){
-				case 'löschen':
+			} else {
+				switch (lastSentence.toLowerCase()) {
+				case "löschen":
 					this.removeLastShot();
 					break;
-				case 'ein':
-				case 'eins':
-				case 'rhein':
-				case 'sein':
+				case "ein":
+				case "eins":
+				case "rhein":
+				case "sein":
 					convertedNumber = 1;
 					break;
-				case 'zwei':
+				case "zwei":
 					convertedNumber = 2;
 					break;
-				case 'drei':
-				case 'sky':
+				case "drei":
+				case "sky":
 					convertedNumber = 3;
 					break;
-				case 'tier':
+				case "tier":
 					convertedNumber = 4;
-					break;	
-				case 'schön':
+					break;
+				case "schön":
 					convertedNumber = 5;
-					break;	
-				case 'sexy':
-				case 'sex':
+					break;
+				case "sexy":
+				case "sex":
 					convertedNumber = 6;
 					break;
-				case '8 uhr':
-				case 'ach':
+				case "8 uhr":
+				case "ach":
 					convertedNumber = 8;
 					break;
-				case '9 uhr':
+				case "9 uhr":
 					convertedNumber = 9;
 					break;
-				case '11 uhr':
+				case "11 uhr":
 					convertedNumber = 11;
 					break;
-				case '13 uhr':
+				case "13 uhr":
 					convertedNumber = 13;
 					break;
-				} 
-				
-				if(Number.isInteger(convertedNumber)){
-					this.currentPlayer.shot = convertedNumber;
+				case "weiter":
+					// this.goToNextPlayer(this.currentPlayer());
+					break;
 				}
-				else{
+
+				if (Number.isInteger(convertedNumber)) {
+					this.currentPlayer.shot = convertedNumber;
+				} else {
 					return;
 				}
 			}
@@ -169,7 +169,7 @@ export default {
 			const player = this.currentPlayer;
 			const shot = player.shot;
 
-			if(this.checkScoreTooHigh(player.shot)){
+			if (this.checkScoreTooHigh(player.shot)) {
 				return;
 			}
 
@@ -178,12 +178,9 @@ export default {
 			const oldLocalScore = player.score;
 			player.score -= this.calculateMultipicator(shot);
 			player.roundDartsThrown++;
-			player.shot = '';
+			player.shot = "";
 
-			this.checkScore(
-				player,
-				oldLocalScore
-			);
+			this.checkScore(player, oldLocalScore);
 			this.nextTurn(player);
 
 			setTimeout(() => {
@@ -193,8 +190,8 @@ export default {
 				});
 			}, 100);
 		},
-		removeLastShot(){
-			if(this.currentPlayer.roundDartsThrown > 0){
+		removeLastShot() {
+			if (this.currentPlayer.roundDartsThrown > 0) {
 				const getLastShot = this.currentPlayer.history.pop();
 				this.currentPlayer.score += getLastShot;
 				this.currentPlayer.roundDartsThrown--;
@@ -216,7 +213,6 @@ export default {
 				const d = Number(shot.slice(1)) * 2;
 				this.checkScoreTooHigh(d);
 				return d;
-
 			} else if (multiplicator === "t") {
 				//have to check multiplication
 				const t = Number(shot.slice(1)) * 3;
@@ -225,53 +221,56 @@ export default {
 			}
 			return Number(shot);
 		},
-		nextTurn(player){
-			if(player.roundDartsThrown === 3){
-				player.roundDartsThrown = 0;
-				player.shot = '';
-				if(this.players.length-1 > this.turn){
-					this.turn++;
-				}
-				else{
-					this.turn = 0;
-				}
-				this.setFocusOnInput();
+		nextTurn(player) {
+			if (player.roundDartsThrown === 3) {
+				this.goToNextPlayer();
 			}
 		},
-		setFocusOnInput(){
+	
+		goToNextPlayer() {
+			this.currentPlayer.roundDartsThrown = 0;
+			this.currentPlayer.shot = "";
+
+			if (this.players.length - 1 > this.turn) {
+				this.turn++;
+			} else {
+				this.turn = 0;
+			}
+
+			this.setFocusOnInput();
+		},
+		setFocusOnInput() {
 			const ref = `input${this.turn}`;
 			this.$refs[ref][0].focus();
 		},
-
 		//eslint-disable-next-line
-		checkScore(player, oldScore) {
+    checkScore(player, oldScore) {
 			const challengedScore = player.score;
 			if (challengedScore < 0) {
 				this.busted(player, oldScore);
 			}
-			if(this.checkout === 'd'){
-				if(challengedScore < 2 && challengedScore > 0){
+			if (this.checkout === "d") {
+				if (challengedScore < 2 && challengedScore > 0) {
 					this.busted(player, oldScore);
 				}
 			}
-			if(this.checkout === 't'){
-				if(challengedScore < 3 && challengedScore > 0){
+			if (this.checkout === "t") {
+				if (challengedScore < 3 && challengedScore > 0) {
 					this.busted(player, oldScore);
 				}
-			}
-			else if (challengedScore === 0) {
+			} else if (challengedScore === 0) {
 				alert("Winner");
 				this.initMatch();
 			}
 		},
-		initMatch(){
+		initMatch() {
 			this.players = [];
 			for (let i = 0; i < this.amountPlayers; i++) {
 				const playerObject = {
 					id: i,
 					score: this.score,
-					shot: '',
-					round: '',
+					shot: "",
+					round: "",
 					roundDartsThrown: 0,
 					history: []
 				};
@@ -288,47 +287,47 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../styles/mixins.scss';
+@import "../styles/mixins.scss";
 
-	.scoreboard-item{
-		padding: 20px;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		max-width: calc(100vw - 40px);
-		@include desktop{
-			max-width: calc(50vw - 40px);
-		}
+.scoreboard-item {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-width: calc(100vw - 40px);
+  @include desktop {
+    max-width: calc(50vw - 40px);
+  }
 
-		&__player{
-			font-size: 20px;
-		}
-		&__score{
-			font-size: 90px;
-		}
-		&--disabled{
-			pointer-events: none;
-			opacity: .2;
-		}
-		&__shot{
-			height: 60px;
-			font-size: 40px;
-			white-space: nowrap;
-			overflow: auto;
-		}
-	}
-	.scoreboard {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-	    height: 100%;
-		@media only screen and (max-width: 678px){
-			grid-template-columns: 1fr;
-		}
-		&--1{
-			grid-template-columns: 1fr;
-		}
-	}
-	.match{
-		height: 100%;
-	}
+  &__player {
+    font-size: 20px;
+  }
+  &__score {
+    font-size: 90px;
+  }
+  &--disabled {
+    pointer-events: none;
+    opacity: 0.2;
+  }
+  &__shot {
+    height: 60px;
+    font-size: 40px;
+    white-space: nowrap;
+    overflow: auto;
+  }
+}
+.scoreboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100%;
+  @media only screen and (max-width: 678px) {
+    grid-template-columns: 1fr;
+  }
+  &--1 {
+    grid-template-columns: 1fr;
+  }
+}
+.match {
+  height: 100%;
+}
 </style>
