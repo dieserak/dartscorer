@@ -153,7 +153,7 @@ export default {
 					convertedNumber = 13;
 					break;
 				case "weiter":
-					// this.goToNextPlayer(this.currentPlayer());
+					this.fillWithNoScores();
 					break;
 				}
 
@@ -226,8 +226,21 @@ export default {
 				this.goToNextPlayer();
 			}
 		},
-	
-		goToNextPlayer() {
+		fillWithNoScores(){
+			if(this.currentPlayer.roundDartsThrown === 2){
+				this.setNewScore();
+			}
+			else if(this.currentPlayer.roundDartsThrown === 1){
+				this.setNewScore();
+				this.setNewScore();
+			}
+			else if(this.currentPlayer.roundDartsThrown === 0){
+				this.setNewScore();
+				this.setNewScore();
+				this.setNewScore();
+			}
+		},
+		goToNextPlayer(fill){
 			this.currentPlayer.roundDartsThrown = 0;
 			this.currentPlayer.shot = "";
 
